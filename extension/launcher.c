@@ -246,15 +246,16 @@ launch_worker(int index, JobDesc *job_desc)
 	BackgroundWorker 			worker;
 	BackgroundWorkerHandle     *handle;
 
-	/* Check if no jobs are running with the same id */
+	/* Check if no jobs are running or run within a minute with the same id */
 	for (j = 0; j < launcher_max_workers; j++)
 	{
-		if (j == index || wstate[j].handle == NULL)
+		if (wstate[j].last_executed == (pg_time_t) 0)
 			continue;
 		if (wstate[j].job_id == job_desc->job_id)
 		{
 		 	pg_time_t 	now = (pg_time_t) time(NULL);
 		 	/* Check if we are trying to run the same job for the second time in the duration of a single minute */
+
 		 	if (wstate[j].last_executed/60 == now/60)
 		 		return;
 			/*
