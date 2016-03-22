@@ -48,7 +48,7 @@ static volatile sig_atomic_t got_sighup = false;
 static volatile sig_atomic_t got_sigterm = false;
 static volatile sig_atomic_t got_sigusr1 = false;
 
-static int 	launcher_naptime = 500;
+static int 	launcher_naptime = 10000;
 
 static int 	launcher_max_workers = 10;
 static char 	*launcher_database = NULL;
@@ -536,9 +536,9 @@ void _PG_init(void)
 							"time in ms that launcher sleeps before checking for jobs",
 							NULL,
 							&launcher_naptime,
-							500,
-							100,
-							900,
+							10000,
+							1000,
+							30000,
 							PGC_SIGHUP,
 							0,
 							NULL,
